@@ -23,7 +23,7 @@ FROM oxorder
       GROUP BY HOUR(OXORDERDATE)
     ) nested;";
 
-        $avgCount = oxDb::getDb(oxDb::FETCH_MODE_NUM)->getOne($query, [1]);
+        $avgCount = oxDb::getDb(oxDb::FETCH_MODE_NUM)->getOne($query);
         if (!$avgCount) {
             return 0;
         }
