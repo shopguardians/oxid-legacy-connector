@@ -96,40 +96,50 @@ class avshopguardians_orderheuristic
 
     /**
      * Returns the average distance between orders in minutes
-     * for the last month
+     * for the last month by weekday
      *
-     * @return false|string
+     * @return false|array
      */
-    public function getAverageMinutesBetweenOrders()
+    public function getAverageMinutesBetweenOrdersByWeekday()
     {
-        $avgDistance = avshopguardians_orderrepository::getAverageMinutesBetweenOrdersInDateRange($this->startDayLastMonth, $this->endDayLastMonth);
+        $avgDistancesByWeekday = avshopguardians_orderrepository::getAvgMinutesBetweenOrdersInDateRangeByWeekday($this->startDayLastMonth, $this->endDayLastMonth);
 
-        return $avgDistance ? $avgDistance : $this->averageOrderDistanceMinutesFallback;
+        return $avgDistancesByWeekday;
     }
 
     /**
-     * Returns the average order distance for a single payment method in minutes
+     * Returns average order distances for a single payment method by weekday
      * for the last month
      *
      * @param $paymentType
-     * @return false|int|string
+     * @return false|array
      */
-    public function getAverageMinutesBetweenOrdersForPaymentType($paymentType)
+    public function getAverageMinutesBetweenOrdersForPaymentTypeByWeekday($paymentType)
     {
-        return avshopguardians_orderrepository::getAverageMinutesBetweenOrdersInDateRange($this->startDayLastMonth, $this->endDayLastMonth, $paymentType);
+        return avshopguardians_orderrepository::getAvgMinutesBetweenOrdersInDateRangeByWeekday($this->startDayLastMonth, $this->endDayLastMonth, $paymentType);
     }
 
     /**
      * Returns the assumed timerange in minutes where a order should happen
      * otherwise alert would be raised
      *
-     * @return false|float
+     * @return false|float[]
      */
-    public function getAssumedOrderDistance()
+    public function getOrderDistancesByWeekday()
     {
-        $averageOrderDistanceMinutes = $this->getAverageMinutesBetweenOrders();
+        $averagesByWeekday = $this->getAverageMinutesBetweenOrdersByWeekday();
 
-        return round($averageOrderDistanceMinutes * $this->alertMinutesSafetyBufferFactor);
+        $distances = [];
+
+        foreach ($averagesByWeekday as $oneAverage) {
+            $distances[] = [
+                'weekday' => (int) $oneAverage['weekdayNumber'],
+                'tresholdMinutes' => round($oneAverage['avgMinutes'] * $this->alertMinutesSafetyBufferFactor),
+                'actualMinutes' => round($oneAverage['avgMinutes'])
+            ];
+        }
+
+        return $distances;
     }
 
     /**
@@ -138,12 +148,11 @@ class avshopguardians_orderheuristic
      *
      * e.g. credt card orders are assumed every 20 mins
      *
-     * Returns array of key=paymentmethod, value=mins
      *
      * @param $paymentMethods
      * @return array
      */
-    public function getAssumedOrderDistanceByPaymentMethods($paymentMethods)
+    public function getOrderDistancesByWeekdayAndPaymentMethods($paymentMethods)
     {
         $distances = [];
 
@@ -152,10 +161,20 @@ class avshopguardians_orderheuristic
         }
 
         foreach ($paymentMethods as $paymentMethod) {
+
+            $averagesByWeekday = $this->getAverageMinutesBetweenOrdersForPaymentTypeByWeekday($paymentMethod['paymenttype']);
+
+            foreach ($averagesByWeekday as &$oneAverage) {
+                $oneAverage['actualMinutes']    = round($oneAverage['avgMinutes']);
+                $oneAverage['tresholdMinutes']  = round($oneAverage['avgMinutes'] * $this->alertMinutesSafetyBufferFactor);
+                unset($oneAverage['avgMinutes']);
+            }
+
             $distances[] = [
-                'minutes' => round($this->getAverageMinutesBetweenOrdersForPaymentType($paymentMethod['paymenttype']) * $this->alertMinutesSafetyBufferFactor),
                 'paymenttype' => $paymentMethod['paymenttype'],
-                'description' => $paymentMethod['description']
+                'description' => $paymentMethod['description'],
+                'byWeekdays' => $averagesByWeekday
+
             ];
         }
 

@@ -47,8 +47,8 @@ class av_shopguardians_orders extends av_shopguardians_basecontroller
 
         return $this->renderJson([
             'usualWorkingHours' => $orderHeuristic->getUsualWorkingHours(),
-            'assumedOrderDistanceMinutes' => $orderHeuristic->getAssumedOrderDistance(),
-            'assumedOrderDistanceByPaymentMethods' => $orderHeuristic->getAssumedOrderDistanceByPaymentMethods($paymentMethods)
+            'averageOrderDistancesByWeekday' => $orderHeuristic->getOrderDistancesByWeekday(),
+            'averageOrderDistancesByWeekdayAndPaymentMethods' => $orderHeuristic->getOrderDistancesByWeekdayAndPaymentMethods($paymentMethods)
         ]);
     }
 
