@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/avshopguardians_baseserializer.php';
+
 /**
  * Class avshopguardiansarticlelistserializer
  *
@@ -7,7 +9,7 @@
  * @copyright 2020 active value GmbH
  *
  */
-class avshopguardians_articlelistserializer
+class avshopguardians_articlelistserializer extends avshopguardians_baseserializer
 {
     /**
      * Turn this item object into a generic array
@@ -32,19 +34,6 @@ class avshopguardians_articlelistserializer
         }
 
         return $serialized;
-    }
-
-    /**
-     * Returns full url to article
-     *
-     * @param $article
-     * @return string
-     */
-    public static function getDetailUrl($article)
-    {
-        if (empty($article['seoLink'])) return null;
-        $sFullUrl =  oxRegistry::getConfig()->getShopUrl() . $article['seoLink'];
-        return oxRegistry::get('oxUtilsUrl')->processSeoUrl($sFullUrl);
     }
 
     /**

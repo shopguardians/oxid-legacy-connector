@@ -21,7 +21,7 @@ $aModule = [
     'title'       => '<span style="color: #706f6f;">SHOP</span><span style="color: #000;"><strong>GUARDIANS</strong></span> Connector',
     'description' => 'Shopguardians connector',
     'thumbnail'   => 'img.png',
-    'version'     => '1.0.3',
+    'version'     => '1.0.4',
     'author'      => 'Shopguardians',
     'url'         => 'https://shopguardians.de',
     'email'       => 'support@shopguardians.de',
@@ -37,17 +37,21 @@ $aModule = [
         'av_shopguardians_articles' => 'av/shopguardians/controllers/api/av_shopguardians_articles.php',
         'av_shopguardians_orders' => 'av/shopguardians/controllers/api/av_shopguardians_orders.php',
         'av_shopguardians_customers' => 'av/shopguardians/controllers/api/av_shopguardians_customers.php',
+        'av_shopguardians_categories' => 'av/shopguardians/controllers/api/av_shopguardians_categories.php',
 
         /** Core */
         'avshopguardians_events' => 'av/shopguardians/core/avshopguardians_events.php',
         'avshopguardians_orderheuristic' => 'av/shopguardians/core/orderheuristic/avshopguardians_orderheuristic.php',
         'avshopguardians_articlelistserializer' => 'av/shopguardians/core/serializer/avshopguardians_articlelistserializer.php',
+        'avshopguardians_categorylistserializer' => 'av/shopguardians/core/serializer/avshopguardians_categorylistserializer.php',
+        'avshopguardians_baseserializer' => 'av/shopguardians/core/serializer/avshopguardians_baseserializer.php',
         'avshopguardians_articleserializer' => 'av/shopguardians/core/serializer/avshopguardians_articleserializer.php',
         'avshopguardians_paginationdata' => 'av/shopguardians/core/utils/avshopguardians_paginationdata.php',
         'avshopguardians_paginationutils' => 'av/shopguardians/core/utils/avshopguardians_paginationutils.php',
         'avshopguardians_responsehelper' => 'av/shopguardians/core/avshopguardians_responsehelper.php',
         'avshopguardians_articlerepository' => 'av/shopguardians/repositories/avshopguardians_articlerepository.php',
-        'avshopguardians_orderrepository' => 'av/shopguardians/repositories/avshopguardians_orderrepository.php'
+        'avshopguardians_orderrepository' => 'av/shopguardians/repositories/avshopguardians_orderrepository.php',
+        'avshopguardians_categoryrepository' => 'av/shopguardians/repositories/avshopguardians_categoryrepository.php'
     ],
     'templates'   => [
     ],
