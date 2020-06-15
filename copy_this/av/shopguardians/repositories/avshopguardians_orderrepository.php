@@ -67,7 +67,6 @@ GROUP BY HOUR(OXORDERDATE)";
 FROM oxorder
 WHERE OXORDERDATE >= ? AND OXORDERDATE <= ?
 
-GROUP BY WEEKDAY(OXORDERDATE)
 ";
 
         $params = [$fromDate, $toDate];
@@ -76,6 +75,8 @@ GROUP BY WEEKDAY(OXORDERDATE)
             $query .= ' AND OXPAYMENTTYPE = ?';
             $params[] = $paymentMethod;
         }
+
+        $query .= ' GROUP BY WEEKDAY(OXORDERDATE)';
 
         return oxDb::getDb(oxDb::FETCH_MODE_ASSOC)->getAll($query, $params);
     }
